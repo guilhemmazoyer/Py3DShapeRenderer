@@ -25,7 +25,7 @@ class Renderer:
 
     #[p1,p2,p3,p4,color index]
     FACE_TABLE = [[0,1,2,3,0],[1,5,6,2,1],
-                [3,4,7,6,2],[4,0,3,7,3],
+                [4,5,6,7,2],[4,0,3,7,3],
                 [3,2,6,7,4],[0,1,5,4,5]]
 
     GAME_FPS = 120
@@ -41,6 +41,7 @@ class Renderer:
     # Render:
     focal_length = 300
     rotX = rotY = rotZ = False
+    fill = False
 
     # GUI:
     sliderRotX = Slider
@@ -61,9 +62,45 @@ class Renderer:
     
     @classmethod
     def drawPolygon(self, face):
-        polygonPoints = self.findPolygonPoint(face)
-        pygame.draw.polygon(self._WIN, (220,220,220), polygonPoints, 0)
+        farPointIndex = self.findFarestPoint()
+        facesToDraw = self.findFacesToDraw(farPointIndex)
+        for face in facesToDraw :
+            polygonPoints = self.findPolygonPoint(face)
+            pygame.draw.polygon(self._WIN, self.getColorFromIndex(face[4]), polygonPoints, 0)
+
+        nearPointIndex = self.findNearestPoint()
+        facesToDraw = self.findFacesToDraw(nearPointIndex)
+        for face in facesToDraw :
+            polygonPoints = self.findPolygonPoint(face)
+            pygame.draw.polygon(self._WIN, self.getColorFromIndex(face[4]), polygonPoints, 0)
     
+    @classmethod
+    def findFarestPoint(self):
+        result = 0
+        for i in range(len(self.VERTEX_TABLE)) :
+            if(self.VERTEX_TABLE[i][2] > self.VERTEX_TABLE[result][2]) :
+                result = i
+        print("Far : " + str(result))
+        return result #index of the farest point (to the camera)
+    
+    @classmethod
+    def findNearestPoint(self):
+        result = 0
+        for i in range(len(self.VERTEX_TABLE)) :
+            if(self.VERTEX_TABLE[i][2] < self.VERTEX_TABLE[result][2]) :
+                result = i
+        print("Near : " + str(result))
+        return result #index of the nearest point (to the camera)
+
+    @classmethod
+    def findFacesToDraw(self, pointIndex):
+        facesToDraw = []
+        for face in self.FACE_TABLE :
+            for i in range(len(face)-1):
+                if(face[i]==pointIndex):
+                    facesToDraw.append(face)
+        return facesToDraw
+
     @classmethod
     def findPolygonPoint(self, face):
         P1 = self.project3DOn2DScreen(self.VERTEX_TABLE[face[0]])
@@ -100,6 +137,23 @@ class Renderer:
                                     vertex[0]*self.ROTATION_MATRICE[1]+vertex[1]*self.ROTATION_MATRICE[3]]
                 vertex[0] = ROTATION_RESULT[0]
                 vertex[1] = ROTATION_RESULT[1]
+
+    @staticmethod
+    def getColorFromIndex(index):
+        if index==0:
+            return (250,0,0)
+        elif index==1:
+            return (125,125,0)
+        elif index==2:
+            return (0,250,0)
+        elif index==3:
+            return (0,125,125)
+        elif index==4:
+            return (0,0,250)
+        elif index==5:
+            return (125,125,125)
+        else:
+            return (0,0,0)
 
     @staticmethod
     def checkEvents():
