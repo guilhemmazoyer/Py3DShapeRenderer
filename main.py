@@ -1,7 +1,5 @@
 import renderer
-import sys, math
 import pygame
-from pygame.locals import KEYDOWN, K_q
 import pygame_widgets
 from pygame_widgets.slider import Slider
 from pygame_widgets.textbox import TextBox
@@ -35,6 +33,8 @@ def main(self):
     sliderFocalLength = Slider(self._WIN, 25, self.HEIGHT-40, 200, 15, min=50, max=400, step=2, handleColour=(180,0,0), initial=self.focal_length)
     outputFocalLength = TextBox(self._WIN, 105, self.HEIGHT-62, 40, 25, fontSize=20)
     outputFocalLength.disable()  # Act as label instead of textbox
+
+
 
     while self.running:
         self.checkEvents()

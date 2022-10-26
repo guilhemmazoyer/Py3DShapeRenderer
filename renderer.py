@@ -1,9 +1,7 @@
 import sys, math
 import pygame
 from pygame.locals import KEYDOWN, K_q
-import pygame_widgets
 from pygame_widgets.slider import Slider
-from pygame_widgets.textbox import TextBox
 
 class Renderer:
 # CONSTANTS:
