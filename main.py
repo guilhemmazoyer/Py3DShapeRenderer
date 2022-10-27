@@ -73,6 +73,7 @@ def main(self):
     Po7.disable()  # Act as label instead of textbox
 
 
+
     while self.running:
         pygame.time.Clock().tick(self.GAME_FPS)
         self.checkEvents()
@@ -102,39 +103,16 @@ def main(self):
         self._WIN.fill(self.BACKGROUND_COLOR)
 
         if sliderNum.getValue() == 1 :
-            Po0.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[0])[0])
-            Po0.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[0])[1])
-            Po1.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[1])[0])
-            Po1.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[1])[1])
-            Po2.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[2])[0])
-            Po2.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[2])[1])
-            Po3.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[3])[0])
-            Po3.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[3])[1])
-            Po4.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[4])[0])
-            Po4.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[4])[1])
-            Po5.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[5])[0])
-            Po5.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[5])[1])
-            Po6.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[6])[0])
-            Po6.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[6])[1])
-            Po7.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[7])[0])
-            Po7.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[7])[1])
+            Po0.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[0])[0]);Po0.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[0])[1])
+            Po1.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[1])[0]);Po1.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[1])[1])
+            Po2.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[2])[0]);Po2.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[2])[1])
+            Po3.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[3])[0]);Po3.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[3])[1])
+            Po4.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[4])[0]);Po4.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[4])[1])
+            Po5.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[5])[0]);Po5.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[5])[1])
+            Po6.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[6])[0]);Po6.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[6])[1])
+            Po7.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[7])[0]);Po7.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[7])[1])
         else:
-            Po0.setX(0)
-            Po0.setY(0)
-            Po1.setX(0)
-            Po1.setY(0)
-            Po2.setX(0)
-            Po2.setY(0)
-            Po3.setX(0)
-            Po3.setY(0)
-            Po4.setX(0)
-            Po4.setY(0)
-            Po5.setX(0)
-            Po5.setY(0)
-            Po6.setX(0)
-            Po6.setY(0)
-            Po7.setX(0)
-            Po7.setY(0)
+            Po0.setX(0);Po0.setY(0);Po1.setX(0);Po1.setY(0);Po2.setX(0);Po2.setY(0);Po3.setX(0);Po3.setY(0);Po4.setX(0);Po4.setY(0);Po5.setX(0);Po5.setY(0);Po6.setX(0);Po6.setY(0);Po7.setX(0);Po7.setY(0)
 
         # Draw the lines
         for line in self.EDGE_TABLE :
