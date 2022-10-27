@@ -7,10 +7,11 @@ class Renderer:
 # CONSTANTS:
     SCREENSIZE = WIDTH, HEIGHT = 500, 500
     LIT = (214, 214, 66)
-    BACKGROUND_COLOR = (10, 10, 10)
+    BACKGROUND_BORDER_GRADIENT = (50, 50, 50)
+    BACKGROUND_CENTER_GRADIENT = (225, 225, 225)
 
     #[x,y,z]
-    VERTEX_TABLE = [[23,63,85], # Cube1
+    VERTEX_TABLE = [[23,63,85],
                     [23,-63,85],
                     [-86,-63,22],
                     [-86,63,22],
@@ -64,9 +65,9 @@ class Renderer:
     @classmethod
     def drawPolygon(self):
         facesToDraw = self.findFacesToDrawFromFaceArray(self.sortFaces(self.FACE_TABLE))
-        for face in facesToDraw :
-            polygonPoints = self.findPolygonPoint(face)
-            pygame.draw.polygon(self._WIN, self.getColorFromIndex(face[4]), polygonPoints, 0)
+        for i in range(2,len(facesToDraw)) :
+            polygonPoints = self.findPolygonPoint(facesToDraw[i])
+            pygame.draw.polygon(self._WIN, self.getColorFromIndex(facesToDraw[i][4]), polygonPoints, 0)
 
     @classmethod
     def sortFaces(self, facesArray):
@@ -149,6 +150,18 @@ class Renderer:
                                     vertex[0]*self.ROTATION_MATRICE[1]+vertex[1]*self.ROTATION_MATRICE[3]]
                 vertex[0] = ROTATION_RESULT[0]
                 vertex[1] = ROTATION_RESULT[1]
+
+    @classmethod
+    def gradientRect(self, border_colour, middle_colour, target_rect ):
+        """ Draw a gradient filled rectangle covering <target_rect> """
+        colour_rect = pygame.Surface( ( 3, 3 ) )                                   # tiny! 3x3 bitmap
+        pygame.draw.line( colour_rect, border_colour,  ( 0,0 ), ( 0,2 ) )            # up colour line
+        pygame.draw.line( colour_rect, border_colour, ( 1,0 ), ( 1,2 ) )            # middle colour line
+        pygame.draw.line( colour_rect, border_colour, ( 2,0 ), ( 2,2 ) )            # down colour line
+        pygame.draw.line( colour_rect, middle_colour, ( 1,1 ), ( 1,1 ) )            # center colour point
+
+        colour_rect = pygame.transform.smoothscale( colour_rect, ( target_rect.width, target_rect.height ) )  # stretch!
+        self._WIN.blit( colour_rect, target_rect )
 
     @staticmethod
     def getColorFromIndex(index):

@@ -101,6 +101,7 @@ def main(self):
 
         # Fill the background
         self._WIN.fill(self.BACKGROUND_COLOR)
+        self.gradientRect(self.BACKGROUND_BORDER_GRADIENT, self.BACKGROUND_CENTER_GRADIENT, pygame.Rect(0,0, self.WIDTH,self.HEIGHT) )
 
         if sliderNum.getValue() == 1 :
             Po0.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[0])[0]);Po0.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[0])[1])
@@ -127,7 +128,7 @@ def main(self):
         self.rotateOnAxis()
 
         pygame_widgets.update(pygame.event.get())
-        pygame.display.update()
+        pygame.display.flip()
 
 if __name__ == '__main__':
     object = renderer.Renderer
