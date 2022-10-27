@@ -28,7 +28,7 @@ class Renderer:
                 [4,5,6,7,2],[4,0,3,7,3],
                 [3,2,6,7,4],[0,1,5,4,5]]
 
-    GAME_FPS = 120
+    GAME_FPS = 10
 
     ROTATION_ANGLE = 0.01
     ROTATION_MATRICE = [math.cos(ROTATION_ANGLE),-math.sin(ROTATION_ANGLE),math.sin(ROTATION_ANGLE),math.cos(ROTATION_ANGLE)]
@@ -62,25 +62,11 @@ class Renderer:
     
     @classmethod
     def drawPolygon(self):
-        facesToDraw = self.findFacesToDraw(self.sortPoints(self.VERTEX_TABLE)[0])
+        facesToDraw = self.findFacesToDrawFromIndexArray(self.sortPoints(self.VERTEX_TABLE))
         for face in facesToDraw :
             polygonPoints = self.findPolygonPoint(face)
             pygame.draw.polygon(self._WIN, self.getColorFromIndex(face[4]), polygonPoints, 0)
 
-
-        """
-        farPointIndex = self.findFarestPoint()
-        facesToDraw = self.findFacesToDraw(farPointIndex)
-        for face in facesToDraw :
-            polygonPoints = self.findPolygonPoint(face)
-            pygame.draw.polygon(self._WIN, self.getColorFromIndex(face[4]), polygonPoints, 0)
-
-        nearPointIndex = self.findNearestPoint()
-        facesToDraw = self.findFacesToDraw(nearPointIndex)
-        for face in facesToDraw :
-            polygonPoints = self.findPolygonPoint(face)
-            pygame.draw.polygon(self._WIN, self.getColorFromIndex(face[4]), polygonPoints, 0)
-        """
     @staticmethod
     def sortPoints(pointsArray):
         # Create a copy of pointArray and iterate on it
@@ -95,7 +81,7 @@ class Renderer:
             # unsorted array
             min_idx = i
             for j in range(i+1, len(APoint)):
-                if APoint[min_idx][2] > APoint[j][2]:
+                if APoint[min_idx][2] < APoint[j][2]:
                     min_idx = j
                     
             # Swap the found minimum element with
@@ -105,30 +91,38 @@ class Renderer:
         return AIndex
 
     @classmethod
-    def findFarestPoint(self):
-        result = 0
-        for i in range(len(self.VERTEX_TABLE)) :
-            if(self.VERTEX_TABLE[i][2] > self.VERTEX_TABLE[result][2]) :
-                result = i
-        #print("Far : " + str(result))
-        return result #index of the farest point (to the camera)
-    
-    @classmethod
-    def findNearestPoint(self):
-        result = 0
-        for i in range(len(self.VERTEX_TABLE)) :
-            if(self.VERTEX_TABLE[i][2] < self.VERTEX_TABLE[result][2]) :
-                result = i
-        #print("Near : " + str(result))
-        return result #index of the nearest point (to the camera)
-
-    @classmethod
-    def findFacesToDraw(self, pointIndex):
+    def findFacesToDrawFromIndexPoint(self, pointIndex):
         facesToDraw = []
         for face in self.FACE_TABLE :
             for i in range(len(face)-1):
                 if(face[i]==pointIndex):
                     facesToDraw.append(face)
+        return facesToDraw
+    
+    @classmethod
+    def findFacesToDrawFromIndexArray(self, arrayIndex):
+        facesToDraw = []
+        tempFaceStock = []
+        print('\n' + "arrayIndex :")
+        print(arrayIndex)
+
+        # Find all the faces to draw
+        for h in range(len(arrayIndex)-1):
+            for face in self.FACE_TABLE :
+                for i in range(len(face)-1):
+                    if(arrayIndex[h]==face[i] or arrayIndex[h+1]==face[i]):
+                        if((i+1) <= (len(face)-1)):
+                            for j in range(i+1,len(face)-1):
+                                if(arrayIndex[h]==face[j] or arrayIndex[h+1]==face[j]):
+                                    tempFaceStock.append(face)
+
+        # Clean the array
+        tempFaceStock.reverse()
+        for face in tempFaceStock:
+            if face not in facesToDraw:
+                facesToDraw.append(face)
+        facesToDraw.reverse()
+
         return facesToDraw
 
     @classmethod
