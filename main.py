@@ -10,6 +10,10 @@ def main(self):
     self._WIN = pygame.display.set_mode(self.SCREENSIZE)
 
 # GUI:
+    outputRot = TextBox(self._WIN, 75, 5, 65, 20, fontSize=20, borderThickness=2)
+    outputRot.setText("Rotation")
+    outputRot.disable()  # Act as label instead of textbox
+
     sliderRotX = Slider(self._WIN, 25, 25, 30, 15, min=0, max=1, step=1, handleColour=(180,0,0), initial=0)
     outputRotX = TextBox(self._WIN, 30, 35, 20, 20, fontSize=20, borderThickness=2)
     outputRotX.setText("X")
@@ -30,12 +34,17 @@ def main(self):
     outputFill.setText("FILL")
     outputFill.disable()  # Act as label instead of textbox
 
+    sliderNum = Slider(self._WIN, self.WIDTH-55, 75, 30, 15, min=0, max=1, step=1, handleColour=(180,0,0), initial=0)
+    outputNum = TextBox(self._WIN, self.WIDTH-60, 90, 40, 20, fontSize=20, borderThickness=2)
+    outputNum.setText("NUM")
+    outputNum.disable()  # Act as label instead of textbox
+
     sliderFocalLength = Slider(self._WIN, 25, self.HEIGHT-40, 200, 15, min=50, max=400, step=2, handleColour=(180,0,0), initial=self.focal_length)
-    outputFocalLength = TextBox(self._WIN, 105, self.HEIGHT-62, 40, 25, fontSize=20)
+    outputFocalLength = TextBox(self._WIN, 88, self.HEIGHT-62, 74, 25, fontSize=20)
     outputFocalLength.disable()  # Act as label instead of textbox
 
     sliderFPS = Slider(self._WIN, self.WIDTH-225, self.HEIGHT-40, 200, 15, min=1, max=200, step=10, handleColour=(180,0,0), initial=self.GAME_FPS)
-    outputFPS = TextBox(self._WIN, self.WIDTH-145, self.HEIGHT-62, 40, 25, fontSize=20)
+    outputFPS = TextBox(self._WIN, self.WIDTH-165, self.HEIGHT-62, 84, 25, fontSize=20)
     outputFPS.disable()  # Act as label instead of textbox
 
     Po0 = TextBox(self._WIN, 0, 0, 0, 0, fontSize=20, borderThickness=2, textColour=(255,255,255))
@@ -68,9 +77,9 @@ def main(self):
         pygame.time.Clock().tick(self.GAME_FPS)
         self.checkEvents()
         self.focal_length = sliderFocalLength.getValue()
-        outputFocalLength.setText(sliderFocalLength.getValue())
+        outputFocalLength.setText("Focal: " + str(sliderFocalLength.getValue()))
         self.GAME_FPS = sliderFPS.getValue()
-        outputFPS.setText(sliderFPS.getValue())
+        outputFPS.setText(str(sliderFPS.getValue()) + " tick/sec")
 
         if(sliderRotX.getValue() == 1) :
             self.rotX = True
@@ -92,26 +101,44 @@ def main(self):
         # Fill the background
         self._WIN.fill(self.BACKGROUND_COLOR)
 
+        if sliderNum.getValue() == 1 :
+            Po0.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[0])[0])
+            Po0.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[0])[1])
+            Po1.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[1])[0])
+            Po1.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[1])[1])
+            Po2.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[2])[0])
+            Po2.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[2])[1])
+            Po3.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[3])[0])
+            Po3.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[3])[1])
+            Po4.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[4])[0])
+            Po4.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[4])[1])
+            Po5.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[5])[0])
+            Po5.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[5])[1])
+            Po6.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[6])[0])
+            Po6.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[6])[1])
+            Po7.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[7])[0])
+            Po7.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[7])[1])
+        else:
+            Po0.setX(0)
+            Po0.setY(0)
+            Po1.setX(0)
+            Po1.setY(0)
+            Po2.setX(0)
+            Po2.setY(0)
+            Po3.setX(0)
+            Po3.setY(0)
+            Po4.setX(0)
+            Po4.setY(0)
+            Po5.setX(0)
+            Po5.setY(0)
+            Po6.setX(0)
+            Po6.setY(0)
+            Po7.setX(0)
+            Po7.setY(0)
+
         # Draw the lines
         for line in self.EDGE_TABLE :
             self.drawLine(line)
-
-        Po0.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[0])[0])
-        Po0.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[0])[1])
-        Po1.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[1])[0])
-        Po1.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[1])[1])
-        Po2.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[2])[0])
-        Po2.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[2])[1])
-        Po3.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[3])[0])
-        Po3.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[3])[1])
-        Po4.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[4])[0])
-        Po4.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[4])[1])
-        Po5.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[5])[0])
-        Po5.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[5])[1])
-        Po6.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[6])[0])
-        Po6.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[6])[1])
-        Po7.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[7])[0])
-        Po7.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[7])[1])
 
         if(self.fill):
             # Fill the faces
