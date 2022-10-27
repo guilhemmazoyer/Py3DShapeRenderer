@@ -28,7 +28,7 @@ class Renderer:
                 [4,5,6,7,2],[4,0,3,7,3],
                 [3,2,6,7,4],[0,1,5,4,5]]
 
-    GAME_FPS = 10
+    GAME_FPS = 60
 
     ROTATION_ANGLE = 0.01
     ROTATION_MATRICE = [math.cos(ROTATION_ANGLE),-math.sin(ROTATION_ANGLE),math.sin(ROTATION_ANGLE),math.cos(ROTATION_ANGLE)]
@@ -62,7 +62,8 @@ class Renderer:
     
     @classmethod
     def drawPolygon(self):
-        facesToDraw = self.findFacesToDrawFromIndexArray(self.sortPoints(self.VERTEX_TABLE))
+        #facesToDraw = self.findFacesToDrawFromIndexPoint(self.sortPoints(self.VERTEX_TABLE))
+        facesToDraw = self.findFacesToDrawFromLineArray(self.sortLines(self.EDGE_TABLE))
         for face in facesToDraw :
             polygonPoints = self.findPolygonPoint(face)
             pygame.draw.polygon(self._WIN, self.getColorFromIndex(face[4]), polygonPoints, 0)
@@ -89,6 +90,38 @@ class Renderer:
             APoint[i], APoint[min_idx] = APoint[min_idx], APoint[i]
             AIndex[i], AIndex[min_idx] = AIndex[min_idx], AIndex[i]
         return AIndex
+    
+    @classmethod
+    def sortLines(self, linesArray):
+        # Create a copy of linesArray and iterate on it
+        ALine=[]
+        AIndex=[0,1,2,3,4,5,6,7,8,9,10,11]
+        for line in linesArray:
+            ALine.append(line)
+
+        for i in range(len(ALine)):
+	
+            # Find the minimum element in remaining
+            # unsorted array
+            min_idx = i
+            for j in range(i+1, len(ALine)):
+                # take the average value of Z for each line
+                ea1 = ALine[min_idx][0]
+                eb1 = ALine[min_idx][1]
+                e1 = (self.VERTEX_TABLE[ea1][2] + self.VERTEX_TABLE[eb1][2])/2
+
+                ea2 = ALine[j][0]
+                eb2 = ALine[j][1]
+                e2 = (self.VERTEX_TABLE[ea2][2] + self.VERTEX_TABLE[eb2][2])/2
+                
+                if e1 < e2:
+                    min_idx = j
+                    
+            # Swap the found minimum element with
+            # the first element	
+            ALine[i], ALine[min_idx] = ALine[min_idx], ALine[i]
+            AIndex[i], AIndex[min_idx] = AIndex[min_idx], AIndex[i]
+        return AIndex
 
     @classmethod
     def findFacesToDrawFromIndexPoint(self, pointIndex):
@@ -100,30 +133,9 @@ class Renderer:
         return facesToDraw
     
     @classmethod
-    def findFacesToDrawFromIndexArray(self, arrayIndex):
+    def findFacesToDrawFromLineArray(self, arrayIndex):
         facesToDraw = []
-        tempFaceStock = []
-        print('\n' + "arrayIndex :")
         print(arrayIndex)
-
-        # Find all the faces to draw
-        for h in range(len(arrayIndex)-1):
-            for face in self.FACE_TABLE :
-                for i in range(len(face)-1):
-                    if(arrayIndex[h]==face[i] or arrayIndex[h+1]==face[i]):
-                        if((i+1) <= (len(face)-1)):
-                            for j in range(i+1,len(face)-1):
-                                if(arrayIndex[h]==face[j] or arrayIndex[h+1]==face[j]):
-                                    tempFaceStock.append(face)
-
-        # Clean the array
-        tempFaceStock.reverse()
-        for face in tempFaceStock:
-            if face not in facesToDraw:
-                facesToDraw.append(face)
-        facesToDraw.reverse()
-
-        return facesToDraw
 
     @classmethod
     def findPolygonPoint(self, face):
