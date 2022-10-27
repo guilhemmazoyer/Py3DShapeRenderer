@@ -61,8 +61,13 @@ class Renderer:
         pygame.draw.line(self._WIN, self.LIT, SP1, SP2, 2)
     
     @classmethod
-    def drawPolygon(self, face):
-        print(self.sortPoints(self.VERTEX_TABLE))
+    def drawPolygon(self):
+        facesToDraw = self.findFacesToDraw(self.sortPoints(self.VERTEX_TABLE)[0])
+        for face in facesToDraw :
+            polygonPoints = self.findPolygonPoint(face)
+            pygame.draw.polygon(self._WIN, self.getColorFromIndex(face[4]), polygonPoints, 0)
+
+
         """
         farPointIndex = self.findFarestPoint()
         facesToDraw = self.findFacesToDraw(farPointIndex)
@@ -78,19 +83,26 @@ class Renderer:
         """
     @staticmethod
     def sortPoints(pointsArray):
-        # Traverse through 1 to len(array)
-        for i in range(0, len(pointsArray)-1):
-    
-            key = pointsArray[i][2]
-    
-            # Move elements of array[0..i-1], that are greater than key,
-            # to one position ahead of their current position
-            j = i-1
-            while j >= 0 and key < pointsArray[j][2] :
-                    pointsArray[j + 1] = pointsArray[j]
-                    j -= 1
-            pointsArray[j + 1][2] = key
-        return pointsArray
+        # Create a copy of pointArray and iterate on it
+        APoint=[]
+        AIndex=[0,1,2,3,4,5,6,7]
+        for point in pointsArray:
+            APoint.append(point)
+
+        for i in range(len(APoint)):
+	
+            # Find the minimum element in remaining
+            # unsorted array
+            min_idx = i
+            for j in range(i+1, len(APoint)):
+                if APoint[min_idx][2] > APoint[j][2]:
+                    min_idx = j
+                    
+            # Swap the found minimum element with
+            # the first element	
+            APoint[i], APoint[min_idx] = APoint[min_idx], APoint[i]
+            AIndex[i], AIndex[min_idx] = AIndex[min_idx], AIndex[i]
+        return AIndex
 
     @classmethod
     def findFarestPoint(self):
@@ -98,7 +110,7 @@ class Renderer:
         for i in range(len(self.VERTEX_TABLE)) :
             if(self.VERTEX_TABLE[i][2] > self.VERTEX_TABLE[result][2]) :
                 result = i
-        print("Far : " + str(result))
+        #print("Far : " + str(result))
         return result #index of the farest point (to the camera)
     
     @classmethod
@@ -107,7 +119,7 @@ class Renderer:
         for i in range(len(self.VERTEX_TABLE)) :
             if(self.VERTEX_TABLE[i][2] < self.VERTEX_TABLE[result][2]) :
                 result = i
-        print("Near : " + str(result))
+        #print("Near : " + str(result))
         return result #index of the nearest point (to the camera)
 
     @classmethod

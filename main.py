@@ -116,7 +116,7 @@ def main(self):
         if(self.fill):
             # Fill the faces
             for face in self.FACE_TABLE:
-                self.drawPolygon(face)
+                self.drawPolygon()
         
         # Apply rotation
         self.rotateOnAxis()
