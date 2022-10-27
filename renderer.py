@@ -62,6 +62,8 @@ class Renderer:
     
     @classmethod
     def drawPolygon(self, face):
+        print(self.sortPoints(self.VERTEX_TABLE))
+        """
         farPointIndex = self.findFarestPoint()
         facesToDraw = self.findFacesToDraw(farPointIndex)
         for face in facesToDraw :
@@ -73,7 +75,23 @@ class Renderer:
         for face in facesToDraw :
             polygonPoints = self.findPolygonPoint(face)
             pygame.draw.polygon(self._WIN, self.getColorFromIndex(face[4]), polygonPoints, 0)
+        """
+    @staticmethod
+    def sortPoints(pointsArray):
+        # Traverse through 1 to len(array)
+        for i in range(0, len(pointsArray)-1):
     
+            key = pointsArray[i][2]
+    
+            # Move elements of array[0..i-1], that are greater than key,
+            # to one position ahead of their current position
+            j = i-1
+            while j >= 0 and key < pointsArray[j][2] :
+                    pointsArray[j + 1] = pointsArray[j]
+                    j -= 1
+            pointsArray[j + 1][2] = key
+        return pointsArray
+
     @classmethod
     def findFarestPoint(self):
         result = 0
