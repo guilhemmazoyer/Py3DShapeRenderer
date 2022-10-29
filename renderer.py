@@ -43,7 +43,7 @@ class Renderer:
 
     # Render:
     focal_length = 300
-    rotX = rotY = rotZ = False
+    rotX = rotY = rotZ = transX = transY = transXinv = transYinv = False
     fill = False
 
     # GUI:
@@ -130,27 +130,59 @@ class Renderer:
         return [PointX+(self.WIDTH/2),PointY+(self.HEIGHT/2)]
     
     @classmethod
-    def rotateOnAxis(self):
+    def moveAndRotateOnAxis(self):
+        # Déplacement de tous les points du cube sur l'axe X
+        if(self.transX) :
+            for vertex in self.VERTEX_TABLE :
+                if self.transXinv :
+                    if (self.project3DOn2DScreen(vertex)[0]+0.5)<500 :
+                        vertex[0]+=0.5
+                    else:
+                        self.transXinv = False
+                else :
+                    if (self.project3DOn2DScreen(vertex)[0]-0.5)>0 :
+                        vertex[0]-=0.5
+                    else:
+                        self.transXinv = True
+
+        # Déplacement de tous les points du cube sur l'axe Y
+        if(self.transY) :
+            if self.transYinv :
+                for vertex in self.VERTEX_TABLE :
+                    if (self.project3DOn2DScreen(vertex)[1]+0.5)<500 :
+                        vertex[1]+=0.5
+                    else:
+                        self.transYinv = False
+            else :
+                for vertex in self.VERTEX_TABLE :
+                    if (self.project3DOn2DScreen(vertex)[1]-0.5)>0 :
+                        vertex[1]-=0.5
+                    else:
+                        self.transYinv = True
+
+        # Rotation de tous les points du cube par rapport à l'axe X
         if(self.rotX) :
             for vertex in self.VERTEX_TABLE :
-                ROTATION_RESULT = [vertex[1]*self.ROTATION_MATRICE[0]+vertex[2]*self.ROTATION_MATRICE[2],
+                ROTATION_X_RESULT = [vertex[1]*self.ROTATION_MATRICE[0]+vertex[2]*self.ROTATION_MATRICE[2],
                                     vertex[1]*self.ROTATION_MATRICE[1]+vertex[2]*self.ROTATION_MATRICE[3]]
-                vertex[1] = ROTATION_RESULT[0]
-                vertex[2] = ROTATION_RESULT[1]
+                vertex[1] = ROTATION_X_RESULT[0]
+                vertex[2] = ROTATION_X_RESULT[1]
 
+        # Rotation de tous les points du cube par rapport à l'axe Y
         if(self.rotY) :
             for vertex in self.VERTEX_TABLE :
-                ROTATION_RESULT = [vertex[0]*self.ROTATION_MATRICE[0]+vertex[2]*self.ROTATION_MATRICE[2],
+                ROTATION_Y_RESULT = [vertex[0]*self.ROTATION_MATRICE[0]+vertex[2]*self.ROTATION_MATRICE[2],
                                     vertex[0]*self.ROTATION_MATRICE[1]+vertex[2]*self.ROTATION_MATRICE[3]]
-                vertex[0] = ROTATION_RESULT[0]
-                vertex[2] = ROTATION_RESULT[1]
+                vertex[0] = ROTATION_Y_RESULT[0]
+                vertex[2] = ROTATION_Y_RESULT[1]
 
+        # Rotation de tous les points du cube par rapport à l'axe Z
         if(self.rotZ) :
             for vertex in self.VERTEX_TABLE :
-                ROTATION_RESULT = [vertex[0]*self.ROTATION_MATRICE[0]+vertex[1]*self.ROTATION_MATRICE[2],
+                ROTATION_Z_RESULT = [vertex[0]*self.ROTATION_MATRICE[0]+vertex[1]*self.ROTATION_MATRICE[2],
                                     vertex[0]*self.ROTATION_MATRICE[1]+vertex[1]*self.ROTATION_MATRICE[3]]
-                vertex[0] = ROTATION_RESULT[0]
-                vertex[1] = ROTATION_RESULT[1]
+                vertex[0] = ROTATION_Z_RESULT[0]
+                vertex[1] = ROTATION_Z_RESULT[1]
 
     @classmethod
     def gradientRect(self, border_colour, middle_colour, target_rect ):

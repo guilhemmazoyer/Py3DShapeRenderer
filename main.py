@@ -100,7 +100,7 @@ def main(self):
                 self.drawPolygon()
         
         # Apply rotation
-        self.rotateOnAxis()
+        self.moveAndRotateOnAxis()
 
         pygame_widgets.update(pygame.event.get())
         pygame.display.flip()
