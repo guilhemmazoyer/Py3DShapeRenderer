@@ -45,7 +45,7 @@ class Renderer:
     GAME_FPS = 120
 
     ROTATION_ANGLE = 0.01
-    ROTATION_MATRICE = [math.cos(ROTATION_ANGLE),-math.sin(ROTATION_ANGLE),math.sin(ROTATION_ANGLE),math.cos(ROTATION_ANGLE)]
+    ROTATION_MATRICE = [math.cos(ROTATION_ANGLE),math.sin(ROTATION_ANGLE)]
     MOVE_VALUE = 1
 
 # PARAMETERS:
@@ -157,27 +157,57 @@ class Renderer:
         # Rotation de tous les points du cube par rapport à l'axe X
         if(self.rotX) :
             for vertex in self.VERTEX_TABLE :
-                ROTATION_X_RESULT = [vertex[1]*self.ROTATION_MATRICE[0]+vertex[2]*self.ROTATION_MATRICE[2],
-                                    vertex[1]*self.ROTATION_MATRICE[1]+vertex[2]*self.ROTATION_MATRICE[3]]
+                ROTATION_X_RESULT = [vertex[1]*self.ROTATION_MATRICE[0]+vertex[2]*-self.ROTATION_MATRICE[1],
+                                    vertex[1]*self.ROTATION_MATRICE[1]+vertex[2]*self.ROTATION_MATRICE[0]]
                 vertex[1] = ROTATION_X_RESULT[0]
                 vertex[2] = ROTATION_X_RESULT[1]
 
         # Rotation de tous les points du cube par rapport à l'axe Y
         if(self.rotY) :
             for vertex in self.VERTEX_TABLE :
-                ROTATION_Y_RESULT = [vertex[0]*self.ROTATION_MATRICE[0]+vertex[2]*self.ROTATION_MATRICE[2],
-                                    vertex[0]*self.ROTATION_MATRICE[1]+vertex[2]*self.ROTATION_MATRICE[3]]
+                ROTATION_Y_RESULT = [vertex[0]*self.ROTATION_MATRICE[0]+vertex[2]*-self.ROTATION_MATRICE[1],
+                                    vertex[0]*self.ROTATION_MATRICE[1]+vertex[2]*self.ROTATION_MATRICE[0]]
                 vertex[0] = ROTATION_Y_RESULT[0]
                 vertex[2] = ROTATION_Y_RESULT[1]
         
         # Rotation de tous les points du cube par rapport à l'axe Z
         if(self.rotZ) :
             for vertex in self.VERTEX_TABLE :
-                ROTATION_Z_RESULT = [vertex[0]*self.ROTATION_MATRICE[0]+vertex[1]*self.ROTATION_MATRICE[2],
-                                    vertex[0]*self.ROTATION_MATRICE[1]+vertex[1]*self.ROTATION_MATRICE[3]]
+                ROTATION_Z_RESULT = [vertex[0]*self.ROTATION_MATRICE[0]+vertex[1]*-self.ROTATION_MATRICE[1],
+                                    vertex[0]*self.ROTATION_MATRICE[1]+vertex[1]*self.ROTATION_MATRICE[0]]
                 vertex[0] = ROTATION_Z_RESULT[0]
                 vertex[1] = ROTATION_Z_RESULT[1]
 
+    """Move the vertices in the 3D space"""
+    @classmethod
+    def moveVertexOnAxis(self):
+        # Déplacement de tous les points du cube sur l'axe X
+        if self.transX:
+            for vertex in self.VERTEX_TABLE:
+                if self.transXinv :
+                    if (vertex[0]+self.MOVE_VALUE)<500 :
+                        vertex[0]+=self.MOVE_VALUE
+                    else:
+                        self.transXinv = False
+                else :
+                    if (vertex[0]-self.MOVE_VALUE)>0 :
+                        vertex[0]-=self.MOVE_VALUE
+                    else:
+                        self.transXinv = True
+
+        # Déplacement de tous les points du cube sur l'axe Y
+        if self.transY :
+            for vertex in self.PROJECTED_VERTEX_TABLE:
+                if self.transYinv :
+                    if (vertex[1]+self.MOVE_VALUE)<500 :
+                        vertex[1]+=self.MOVE_VALUE
+                    else:
+                        self.transYinv = False
+                else :
+                    if (vertex[1]-self.MOVE_VALUE)>0 :
+                        vertex[1]-=self.MOVE_VALUE
+                    else:
+                        self.transYinv = True
 
     """Project points from 3D space to 2D space"""
     @classmethod

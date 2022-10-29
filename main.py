@@ -53,7 +53,7 @@ def main(self):
     outputFocalLength = TextBox(self._WIN, 88, self.HEIGHT-62, 74, 25, fontSize=20)
     outputFocalLength.disable()  # Act as label instead of textbox
 
-    sliderFPS = Slider(self._WIN, self.WIDTH-225, self.HEIGHT-40, 200, 15, min=1, max=200, step=10, handleColour=(180,0,0), initial=self.GAME_FPS)
+    sliderFPS = Slider(self._WIN, self.WIDTH-225, self.HEIGHT-40, 200, 15, min=1, max=200, step=10,handleColour=(180,0,0), initial=self.GAME_FPS)
     outputFPS = TextBox(self._WIN, self.WIDTH-165, self.HEIGHT-62, 84, 25, fontSize=20)
     outputFPS.disable()  # Act as label instead of textbox
 
@@ -81,14 +81,17 @@ def main(self):
 
         # Fill the background
         self._WIN.fill(self.BACKGROUND_COLOR)
-        self.gradientRect(self.BACKGROUND_BORDER_GRADIENT, self.BACKGROUND_CENTER_GRADIENT, pygame.Rect(0,0, self.WIDTH,self.HEIGHT) )
+        self.gradientRect(self.BACKGROUND_BORDER_GRADIENT, self.BACKGROUND_CENTER_GRADIENT,
+                            pygame.Rect(0,0, self.WIDTH,self.HEIGHT) )
 
         # Apply rotation in the 3D space
         self.rotateOnAxis()
+        # Apply move on vertex
+        self.moveVertexOnAxis()
         # Generate projected table
         self.projectVertices()
-        # Apply move
-        self.moveOnAxis()
+        # Apply move on projected point
+        #self.moveOnAxis()
 
         if sliderNum.getValue() == 1 :
             for i in range(8):
