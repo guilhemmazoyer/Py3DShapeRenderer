@@ -76,6 +76,8 @@ def main(self):
         self.rotY=True if sliderRotY.getValue()==1 else False
         self.rotZ=True if sliderRotZ.getValue()==1 else False
         self.fill=True if sliderFill.getValue()==1 else False
+        self.transX=True if sliderTransX.getValue()==1 else False
+        self.transY=True if sliderTransY.getValue()==1 else False
 
         # Fill the background
         self._WIN.fill(self.BACKGROUND_COLOR)
