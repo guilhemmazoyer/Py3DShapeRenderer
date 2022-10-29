@@ -62,39 +62,6 @@ def main(self):
         PO[i] = TextBox(self._WIN, 0, 0, 0, 0, fontSize=20, borderThickness=2, textColour=(255,255,255))
         PO[i].setText(i)
         PO[i].disable()  # Act as label instead of textbox
-        print(PO[i].text)
-
-    
-    for i in range(8):
-        print(PO[i].text)
-
-    """
-    Po0 = TextBox(self._WIN, 0, 0, 0, 0, fontSize=20, borderThickness=2, textColour=(255,255,255))
-    Po0.setText("0")
-    Po0.disable()  # Act as label instead of textbox
-    Po1 = TextBox(self._WIN, 0, 0, 0, 0, fontSize=20, borderThickness=2, textColour=(255,255,255))
-    Po1.setText("1")
-    Po1.disable()  # Act as label instead of textbox
-    Po2 = TextBox(self._WIN, 0, 0, 0, 0, fontSize=20, borderThickness=2, textColour=(255,255,255))
-    Po2.setText("2")
-    Po2.disable()  # Act as label instead of textbox
-    Po3 = TextBox(self._WIN, 0, 0, 0, 0, fontSize=20, borderThickness=2, textColour=(255,255,255))
-    Po3.setText("3")
-    Po3.disable()  # Act as label instead of textbox
-    Po4 = TextBox(self._WIN, 0, 0, 0, 0, fontSize=20, borderThickness=2, textColour=(255,255,255))
-    Po4.setText("4")
-    Po4.disable()  # Act as label instead of textbox
-    Po5 = TextBox(self._WIN, 0, 0, 0, 0, fontSize=20, borderThickness=2, textColour=(255,255,255))
-    Po5.setText("5")
-    Po5.disable()  # Act as label instead of textbox
-    Po6 = TextBox(self._WIN, 0, 0, 0, 0, fontSize=20, borderThickness=2, textColour=(255,255,255))
-    Po6.setText("6")
-    Po6.disable()  # Act as label instead of textbox
-    Po7 = TextBox(self._WIN, 0, 0, 0, 0, fontSize=20, borderThickness=2, textColour=(255,255,255))
-    Po7.setText("7")
-    Po7.disable()  # Act as label instead of textbox
-    """
-
 
     while self.running:
         pygame.time.Clock().tick(self.GAME_FPS)
@@ -104,35 +71,22 @@ def main(self):
         self.GAME_FPS = sliderFPS.getValue()
         outputFPS.setText(str(sliderFPS.getValue()) + " tick/sec")
 
-        if(sliderRotX.getValue() == 1) :
-            self.rotX = True
-        else:
-            self.rotX = False
-        if(sliderRotY.getValue() == 1) :
-            self.rotY = True
-        else:
-            self.rotY = False
-        if(sliderRotZ.getValue() == 1) :
-            self.rotZ = True
-        else:
-            self.rotZ = False
-        if(sliderFill.getValue() == 1) :
-            self.fill = True
-        else:
-            self.fill = False
+        # Activate the rotation tag when sliders are turn on
+        self.rotX=True if sliderRotX.getValue()==1 else False
+        self.rotY=True if sliderRotY.getValue()==1 else False
+        self.rotZ=True if sliderRotZ.getValue()==1 else False
+        self.fill=True if sliderFill.getValue()==1 else False
 
         # Fill the background
         self._WIN.fill(self.BACKGROUND_COLOR)
         self.gradientRect(self.BACKGROUND_BORDER_GRADIENT, self.BACKGROUND_CENTER_GRADIENT, pygame.Rect(0,0, self.WIDTH,self.HEIGHT) )
 
         if sliderNum.getValue() == 1 :
-            for i in range(8):
-                PO[i].setX(self.project3DOn2DScreen(self.VERTEX_TABLE[i])[0]);PO[i].setY(self.project3DOn2DScreen(self.VERTEX_TABLE[i])[1])
-            
+            for i in range(8):            
+                PO[i].setX(self.project3DOn2DScreen(self.VERTEX_TABLE[i])[0]);PO[i].setY(self.project3DOn2DScreen(self.VERTEX_TABLE[i])[1])    
         else:
             for i in range(8):
                 PO[i].setX(0);PO[i].setY(0)
-                #Po0.setX(0);Po0.setY(0);Po1.setX(0);Po1.setY(0);Po2.setX(0);Po2.setY(0);Po3.setX(0);Po3.setY(0);Po4.setX(0);Po4.setY(0);Po5.setX(0);Po5.setY(0);Po6.setX(0);Po6.setY(0);Po7.setX(0);Po7.setY(0)
 
         # Draw the lines
         for line in self.EDGE_TABLE :
