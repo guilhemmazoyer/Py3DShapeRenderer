@@ -39,6 +39,16 @@ def main(self):
     outputNum.setText("NUM")
     outputNum.disable()  # Act as label instead of textbox
 
+    sliderTransX = Slider(self._WIN, self.WIDTH-120, 25, 30, 15, min=0, max=1, step=1, handleColour=(180,0,0), initial=0)
+    outputTransX = TextBox(self._WIN, self.WIDTH-135, 40, 60, 20, fontSize=20, borderThickness=2)
+    outputTransX.setText("Trans X")
+    outputTransX.disable()  # Act as label instead of textbox
+
+    sliderTransY = Slider(self._WIN, self.WIDTH-120, 75, 30, 15, min=0, max=1, step=1, handleColour=(180,0,0), initial=0)
+    outputTransY = TextBox(self._WIN, self.WIDTH-135, 90, 60, 20, fontSize=20, borderThickness=2)
+    outputTransY.setText("Trans Y")
+    outputTransY.disable()  # Act as label instead of textbox
+
     sliderFocalLength = Slider(self._WIN, 25, self.HEIGHT-40, 200, 15, min=50, max=400, step=2, handleColour=(180,0,0), initial=self.focal_length)
     outputFocalLength = TextBox(self._WIN, 88, self.HEIGHT-62, 74, 25, fontSize=20)
     outputFocalLength.disable()  # Act as label instead of textbox
@@ -47,6 +57,18 @@ def main(self):
     outputFPS = TextBox(self._WIN, self.WIDTH-165, self.HEIGHT-62, 84, 25, fontSize=20)
     outputFPS.disable()  # Act as label instead of textbox
 
+    PO = [0]*8
+    for i in range(8):
+        PO[i] = TextBox(self._WIN, 0, 0, 0, 0, fontSize=20, borderThickness=2, textColour=(255,255,255))
+        PO[i].setText(i)
+        PO[i].disable()  # Act as label instead of textbox
+        print(PO[i].text)
+
+    
+    for i in range(8):
+        print(PO[i].text)
+
+    """
     Po0 = TextBox(self._WIN, 0, 0, 0, 0, fontSize=20, borderThickness=2, textColour=(255,255,255))
     Po0.setText("0")
     Po0.disable()  # Act as label instead of textbox
@@ -71,7 +93,7 @@ def main(self):
     Po7 = TextBox(self._WIN, 0, 0, 0, 0, fontSize=20, borderThickness=2, textColour=(255,255,255))
     Po7.setText("7")
     Po7.disable()  # Act as label instead of textbox
-
+    """
 
 
     while self.running:
@@ -104,16 +126,13 @@ def main(self):
         self.gradientRect(self.BACKGROUND_BORDER_GRADIENT, self.BACKGROUND_CENTER_GRADIENT, pygame.Rect(0,0, self.WIDTH,self.HEIGHT) )
 
         if sliderNum.getValue() == 1 :
-            Po0.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[0])[0]);Po0.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[0])[1])
-            Po1.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[1])[0]);Po1.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[1])[1])
-            Po2.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[2])[0]);Po2.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[2])[1])
-            Po3.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[3])[0]);Po3.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[3])[1])
-            Po4.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[4])[0]);Po4.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[4])[1])
-            Po5.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[5])[0]);Po5.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[5])[1])
-            Po6.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[6])[0]);Po6.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[6])[1])
-            Po7.setX(self.project3DOn2DScreen(self.VERTEX_TABLE[7])[0]);Po7.setY(self.project3DOn2DScreen(self.VERTEX_TABLE[7])[1])
+            for i in range(8):
+                PO[i].setX(self.project3DOn2DScreen(self.VERTEX_TABLE[i])[0]);PO[i].setY(self.project3DOn2DScreen(self.VERTEX_TABLE[i])[1])
+            
         else:
-            Po0.setX(0);Po0.setY(0);Po1.setX(0);Po1.setY(0);Po2.setX(0);Po2.setY(0);Po3.setX(0);Po3.setY(0);Po4.setX(0);Po4.setY(0);Po5.setX(0);Po5.setY(0);Po6.setX(0);Po6.setY(0);Po7.setX(0);Po7.setY(0)
+            for i in range(8):
+                PO[i].setX(0);PO[i].setY(0)
+                #Po0.setX(0);Po0.setY(0);Po1.setX(0);Po1.setY(0);Po2.setX(0);Po2.setY(0);Po3.setX(0);Po3.setY(0);Po4.setX(0);Po4.setY(0);Po5.setX(0);Po5.setY(0);Po6.setX(0);Po6.setY(0);Po7.setX(0);Po7.setY(0)
 
         # Draw the lines
         for line in self.EDGE_TABLE :
