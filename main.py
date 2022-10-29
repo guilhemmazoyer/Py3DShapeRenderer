@@ -83,24 +83,26 @@ def main(self):
         self._WIN.fill(self.BACKGROUND_COLOR)
         self.gradientRect(self.BACKGROUND_BORDER_GRADIENT, self.BACKGROUND_CENTER_GRADIENT, pygame.Rect(0,0, self.WIDTH,self.HEIGHT) )
 
+        # Apply rotation in the 3D space
+        self.rotateOnAxis()
+        # Generate projected table
+        self.projectVertices()
+        # Apply move
+        self.moveOnAxis()
+
         if sliderNum.getValue() == 1 :
-            for i in range(8):            
-                PO[i].setX(self.project3DOn2DScreen(self.VERTEX_TABLE[i])[0]);PO[i].setY(self.project3DOn2DScreen(self.VERTEX_TABLE[i])[1])    
+            for i in range(8):
+                PO[i].setX(self.PROJECTED_VERTEX_TABLE[i][0]);PO[i].setY(self.PROJECTED_VERTEX_TABLE[i][1])  
         else:
             for i in range(8):
                 PO[i].setX(0);PO[i].setY(0)
 
         # Draw the lines
-        for line in self.EDGE_TABLE :
-            self.drawLine(line)
+        self.drawLine()
 
         if(self.fill):
             # Fill the faces
-            for face in self.FACE_TABLE:
-                self.drawPolygon()
-        
-        # Apply rotation
-        self.moveAndRotateOnAxis()
+            self.drawPolygon()
 
         pygame_widgets.update(pygame.event.get())
         pygame.display.flip()

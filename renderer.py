@@ -21,6 +21,17 @@ class Renderer:
                     [-23,-63,-87],
                     [-23,63,-87]]
 
+    #[x,y]
+    #PROJECTED_VERTEX_TABLE = [[0,0]*len(VERTEX_TABLE)]
+    PROJECTED_VERTEX_TABLE = [[0,0],
+                            [0,0],
+                            [0,0],
+                            [0,0],
+                            [0,0],
+                            [0,0],
+                            [0,0],
+                            [0,0]]
+
     #[p1,p2]
     EDGE_TABLE = [[0,1], [1,2], [2,3], [3,0],
                 [0,4], [1,5], [2,6], [3,7],
@@ -35,6 +46,7 @@ class Renderer:
 
     ROTATION_ANGLE = 0.01
     ROTATION_MATRICE = [math.cos(ROTATION_ANGLE),-math.sin(ROTATION_ANGLE),math.sin(ROTATION_ANGLE),math.cos(ROTATION_ANGLE)]
+    MOVE_VALUE = 1
 
 # PARAMETERS:
     # High:
@@ -43,26 +55,28 @@ class Renderer:
 
     # Render:
     focal_length = 300
-    rotX = rotY = rotZ = transX = transY = transXinv = transYinv = False
+    rotX = rotY = rotZ = False
+    transX = transY = transXinv = transYinv = False
     fill = False
 
     # GUI:
-    sliderRotX = Slider
-    sliderRotY = Slider
-    sliderRotZ = Slider
-    sliderFill = Slider
-    sliderFocalLength = Slider
+    sliderRotX = sliderRotY = sliderRotZ = Slider
+    sliderFill = sliderFocalLength = Slider
     
 
     def __init__(self) -> None:
         pass
     
+    """Draw lines"""
     @classmethod
-    def drawLine(self, line):
-        SP1 = self.project3DOn2DScreen(self.VERTEX_TABLE[line[0]])
-        SP2 = self.project3DOn2DScreen(self.VERTEX_TABLE[line[1]])
-        pygame.draw.line(self._WIN, self.LIT, SP1, SP2, 2)
+    def drawLine(self):
+        for line in self.EDGE_TABLE:
+            SP1 = self.PROJECTED_VERTEX_TABLE[line[0]]
+            SP2 = self.PROJECTED_VERTEX_TABLE[line[1]]
+            pygame.draw.line(self._WIN, self.LIT, SP1, SP2, 2)
     
+
+    """Draw polygons"""
     @classmethod
     def drawPolygon(self):
         facesToDraw = self.findFacesToDrawFromFaceArray(self.sortFaces(self.FACE_TABLE))
@@ -70,6 +84,8 @@ class Renderer:
             polygonPoints = self.findPolygonPoint(facesToDraw[i])
             pygame.draw.polygon(self._WIN, self.getColorFromIndex(facesToDraw[i][4]), polygonPoints, 0)
 
+
+    """Sorting tools, croissant storage"""
     @classmethod
     def sortFaces(self, facesArray):
         # Create a copy of linesArray and iterate on it
@@ -106,60 +122,38 @@ class Renderer:
             AIndex[i], AIndex[min_idx] = AIndex[min_idx], AIndex[i]
         return AIndex
 
+
+    """Return faces to draw based on an index array"""
     @classmethod
     def findFacesToDrawFromFaceArray(self, arrayFaceIndex):
         facesToDraw = []
-
         for index in arrayFaceIndex:
             facesToDraw.append(self.FACE_TABLE[index])
         facesToDraw.reverse()
         return facesToDraw
 
+
+    """Return the points that constitute a given face"""
     @classmethod
     def findPolygonPoint(self, face):
-        P1 = self.project3DOn2DScreen(self.VERTEX_TABLE[face[0]])
-        P2 = self.project3DOn2DScreen(self.VERTEX_TABLE[face[1]])
-        P3 = self.project3DOn2DScreen(self.VERTEX_TABLE[face[2]])
-        P4 = self.project3DOn2DScreen(self.VERTEX_TABLE[face[3]])
+        P1 = self.PROJECTED_VERTEX_TABLE[face[0]]
+        P2 = self.PROJECTED_VERTEX_TABLE[face[1]]
+        P3 = self.PROJECTED_VERTEX_TABLE[face[2]]
+        P4 = self.PROJECTED_VERTEX_TABLE[face[3]]
         return [P1,P2,P3,P4]
-        
+
+
+    """Project a vertex and return its value in the 2D space"""
     @classmethod
-    def project3DOn2DScreen(self, Point3D):
-        PointX = (self.focal_length*Point3D[0])/(self.focal_length+Point3D[2])
-        PointY = (self.focal_length*Point3D[1])/(self.focal_length+Point3D[2])
+    def project3DOn2DScreen(self, vertex):
+        PointX = (self.focal_length*vertex[0])/(self.focal_length+vertex[2])
+        PointY = (self.focal_length*vertex[1])/(self.focal_length+vertex[2])
         return [PointX+(self.WIDTH/2),PointY+(self.HEIGHT/2)]
-    
+
+
+    """Rotate the points in the 3D space"""
     @classmethod
-    def moveAndRotateOnAxis(self):
-        # Déplacement de tous les points du cube sur l'axe X
-        if(self.transX) :
-            for vertex in self.VERTEX_TABLE :
-                if self.transXinv :
-                    if (self.project3DOn2DScreen(vertex)[0]+0.5)<500 :
-                        vertex[0]+=0.5
-                    else:
-                        self.transXinv = False
-                else :
-                    if (self.project3DOn2DScreen(vertex)[0]-0.5)>0 :
-                        vertex[0]-=0.5
-                    else:
-                        self.transXinv = True
-
-        # Déplacement de tous les points du cube sur l'axe Y
-        if(self.transY) :
-            if self.transYinv :
-                for vertex in self.VERTEX_TABLE :
-                    if (self.project3DOn2DScreen(vertex)[1]+0.5)<500 :
-                        vertex[1]+=0.5
-                    else:
-                        self.transYinv = False
-            else :
-                for vertex in self.VERTEX_TABLE :
-                    if (self.project3DOn2DScreen(vertex)[1]-0.5)>0 :
-                        vertex[1]-=0.5
-                    else:
-                        self.transYinv = True
-
+    def rotateOnAxis(self):
         # Rotation de tous les points du cube par rapport à l'axe X
         if(self.rotX) :
             for vertex in self.VERTEX_TABLE :
@@ -175,7 +169,7 @@ class Renderer:
                                     vertex[0]*self.ROTATION_MATRICE[1]+vertex[2]*self.ROTATION_MATRICE[3]]
                 vertex[0] = ROTATION_Y_RESULT[0]
                 vertex[2] = ROTATION_Y_RESULT[1]
-
+        
         # Rotation de tous les points du cube par rapport à l'axe Z
         if(self.rotZ) :
             for vertex in self.VERTEX_TABLE :
@@ -183,6 +177,45 @@ class Renderer:
                                     vertex[0]*self.ROTATION_MATRICE[1]+vertex[1]*self.ROTATION_MATRICE[3]]
                 vertex[0] = ROTATION_Z_RESULT[0]
                 vertex[1] = ROTATION_Z_RESULT[1]
+
+
+    """Project points from 3D space to 2D space"""
+    @classmethod
+    def projectVertices(self):
+        for i in range(len(self.VERTEX_TABLE)):
+            self.PROJECTED_VERTEX_TABLE[i] = self.project3DOn2DScreen(self.VERTEX_TABLE[i])
+
+
+    """Move the projected points on an axis"""
+    @classmethod
+    def moveOnAxis(self):
+        # Déplacement de tous les points du cube sur l'axe X
+        if self.transX:
+            for point in self.PROJECTED_VERTEX_TABLE:
+                if self.transXinv :
+                    if (point[0]+self.MOVE_VALUE)<500 :
+                        point[0]+=self.MOVE_VALUE
+                    else:
+                        self.transXinv = False
+                else :
+                    if (point[0]-self.MOVE_VALUE)>0 :
+                        point[0]-=self.MOVE_VALUE
+                    else:
+                        self.transXinv = True
+
+        # Déplacement de tous les points du cube sur l'axe Y
+        if self.transY :
+            for point in self.PROJECTED_VERTEX_TABLE:
+                if self.transYinv :
+                    if (point[1]+self.MOVE_VALUE)<500 :
+                        point[1]+=self.MOVE_VALUE
+                    else:
+                        self.transYinv = False
+                else :
+                    if (point[1]-self.MOVE_VALUE)>0 :
+                        point[1]-=self.MOVE_VALUE
+                    else:
+                        self.transYinv = True
 
     @classmethod
     def gradientRect(self, border_colour, middle_colour, target_rect ):
