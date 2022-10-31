@@ -210,12 +210,12 @@ class Renderer:
         # Déplacement de tous les points du cube sur l'axe X
         if self.transX:
             if self.transXinv :
-                if (self.CENTER_VERTEX[0]+self.MOVE_VALUE)<200 :
+                if (self.CENTER_VERTEX[0]+self.MOVE_VALUE)<175 :
                     self.CENTER_VERTEX[0]+=self.MOVE_VALUE
                 else:
                     self.transXinv = False
             else :
-                if (self.CENTER_VERTEX[0]-self.MOVE_VALUE)>-200 :
+                if (self.CENTER_VERTEX[0]-self.MOVE_VALUE)>-175 :
                     self.CENTER_VERTEX[0]-=self.MOVE_VALUE
                 else:
                     self.transXinv = True
@@ -223,12 +223,12 @@ class Renderer:
         # Déplacement de tous les points du cube sur l'axe Y
         if self.transY :
             if self.transYinv :
-                if (self.CENTER_VERTEX[1]+self.MOVE_VALUE)<200 :
+                if (self.CENTER_VERTEX[1]+self.MOVE_VALUE)<175 :
                     self.CENTER_VERTEX[1]+=self.MOVE_VALUE
                 else:
                     self.transYinv = False
             else :
-                if (self.CENTER_VERTEX[1]-self.MOVE_VALUE)>-200 :
+                if (self.CENTER_VERTEX[1]-self.MOVE_VALUE)>-175 :
                     self.CENTER_VERTEX[1]-=self.MOVE_VALUE
                 else:
                     self.transYinv = True

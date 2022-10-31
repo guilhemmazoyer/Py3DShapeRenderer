@@ -97,7 +97,7 @@ def main(self):
 
         if sliderNum.getValue() == 1 :
             for i in range(8):
-                PO[i].setX(self.PROJECTED_VERTEX_TABLE[i][0]);PO[i].setY(self.PROJECTED_VERTEX_TABLE[i][1])  
+                PO[i].setX(self.MOVED_PROJECTED_VERTEX_TABLE[i][0]-6);PO[i].setY(self.MOVED_PROJECTED_VERTEX_TABLE[i][1])  
         else:
             for i in range(8):
                 PO[i].setX(0);PO[i].setY(0)
