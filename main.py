@@ -84,12 +84,16 @@ def main(self):
         self.gradientRect(self.BACKGROUND_BORDER_GRADIENT, self.BACKGROUND_CENTER_GRADIENT,
                             pygame.Rect(0,0, self.WIDTH,self.HEIGHT) )
 
-        # Apply rotation in the 3D space
-        self.rotateOnAxis()
+        if(self.rotX or self.rotY or self.rotZ) :
+            # Apply rotation in the 3D space
+            self.rotateOnAxis()
+        
         # Generate projected table
         self.projectVertices()
-        # Apply move the center point
-        self.moveProjectVerticesOnAxis()
+
+        if(self.transX or self.transY):
+            # Apply move the center point
+            self.moveProjectVerticesOnAxis()
 
         if sliderNum.getValue() == 1 :
             for i in range(8):

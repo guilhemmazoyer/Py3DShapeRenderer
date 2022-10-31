@@ -35,6 +35,17 @@ class Renderer:
                             [0,0],
                             [0,0]]
 
+    #[x,y] translated
+    #MOVED_PROJECTED_VERTEX_TABLE = [[0,0]*len(VERTEX_TABLE)]
+    MOVED_PROJECTED_VERTEX_TABLE = [[0,0],
+                                    [0,0],
+                                    [0,0],
+                                    [0,0],
+                                    [0,0],
+                                    [0,0],
+                                    [0,0],
+                                    [0,0]]
+
     #[p1,p2]
     EDGE_TABLE = [[0,1], [1,2], [2,3], [3,0],
                 [0,4], [1,5], [2,6], [3,7],
@@ -75,8 +86,8 @@ class Renderer:
     @classmethod
     def drawLine(self):
         for line in self.EDGE_TABLE:
-            SP1 = self.PROJECTED_VERTEX_TABLE[line[0]]
-            SP2 = self.PROJECTED_VERTEX_TABLE[line[1]]
+            SP1 = self.MOVED_PROJECTED_VERTEX_TABLE[line[0]]
+            SP2 = self.MOVED_PROJECTED_VERTEX_TABLE[line[1]]
             pygame.draw.line(self._WIN, self.LIT, SP1, SP2, 2)
     
 
@@ -140,11 +151,21 @@ class Renderer:
     """Return the points that constitute a given face"""
     @classmethod
     def findPolygonPoint(self, face):
-        P1 = self.PROJECTED_VERTEX_TABLE[face[0]]
-        P2 = self.PROJECTED_VERTEX_TABLE[face[1]]
-        P3 = self.PROJECTED_VERTEX_TABLE[face[2]]
-        P4 = self.PROJECTED_VERTEX_TABLE[face[3]]
+        P1 = self.MOVED_PROJECTED_VERTEX_TABLE[face[0]]
+        P2 = self.MOVED_PROJECTED_VERTEX_TABLE[face[1]]
+        P3 = self.MOVED_PROJECTED_VERTEX_TABLE[face[2]]
+        P4 = self.MOVED_PROJECTED_VERTEX_TABLE[face[3]]
         return [P1,P2,P3,P4]
+
+
+    """Project points from 3D space to 2D space"""
+    @classmethod
+    def projectVertices(self):
+        for i in range(len(self.VERTEX_TABLE)):
+            self.PROJECTED_VERTEX_TABLE[i] = self.project3DOn2DScreen(self.VERTEX_TABLE[i])
+        for j in range(len(self.PROJECTED_VERTEX_TABLE)):
+            self.MOVED_PROJECTED_VERTEX_TABLE[j][0] = self.PROJECTED_VERTEX_TABLE[j][0] + self.CENTER_VERTEX[0]
+            self.MOVED_PROJECTED_VERTEX_TABLE[j][1] = self.PROJECTED_VERTEX_TABLE[j][1] + self.CENTER_VERTEX[1]
 
 
     """Project a vertex and return its value in the 2D space"""
@@ -189,35 +210,28 @@ class Renderer:
         # Déplacement de tous les points du cube sur l'axe X
         if self.transX:
             if self.transXinv :
-                if (self.CENTER_VERTEX+self.MOVE_VALUE)<250 :
-                    self.CENTER_VERTEX+=self.MOVE_VALUE
+                if (self.CENTER_VERTEX[0]+self.MOVE_VALUE)<200 :
+                    self.CENTER_VERTEX[0]+=self.MOVE_VALUE
                 else:
                     self.transXinv = False
             else :
-                if (self.CENTER_VERTEX-self.MOVE_VALUE)>-250 :
-                    self.CENTER_VERTEX-=self.MOVE_VALUE
+                if (self.CENTER_VERTEX[0]-self.MOVE_VALUE)>-200 :
+                    self.CENTER_VERTEX[0]-=self.MOVE_VALUE
                 else:
                     self.transXinv = True
 
         # Déplacement de tous les points du cube sur l'axe Y
         if self.transY :
             if self.transYinv :
-                if (self.CENTER_VERTEX+self.MOVE_VALUE)<250 :
-                    self.CENTER_VERTEX+=self.MOVE_VALUE
+                if (self.CENTER_VERTEX[1]+self.MOVE_VALUE)<200 :
+                    self.CENTER_VERTEX[1]+=self.MOVE_VALUE
                 else:
                     self.transYinv = False
             else :
-                if (self.CENTER_VERTEX-self.MOVE_VALUE)>-250 :
-                    self.CENTER_VERTEX-=self.MOVE_VALUE
+                if (self.CENTER_VERTEX[1]-self.MOVE_VALUE)>-200 :
+                    self.CENTER_VERTEX[1]-=self.MOVE_VALUE
                 else:
                     self.transYinv = True
-
-
-    """Project points from 3D space to 2D space"""
-    @classmethod
-    def projectVertices(self):
-        for i in range(len(self.VERTEX_TABLE)):
-            self.PROJECTED_VERTEX_TABLE[i] = self.project3DOn2DScreen(self.VERTEX_TABLE[i])
 
 
     @classmethod
