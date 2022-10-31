@@ -86,12 +86,10 @@ def main(self):
 
         # Apply rotation in the 3D space
         self.rotateOnAxis()
-        # Apply move on vertex
-        self.moveVertexOnAxis()
         # Generate projected table
         self.projectVertices()
-        # Apply move on projected point
-        #self.moveOnAxis()
+        # Apply move the center point
+        self.moveProjectVerticesOnAxis()
 
         if sliderNum.getValue() == 1 :
             for i in range(8):

@@ -12,6 +12,9 @@ class Renderer:
     BACKGROUND_CENTER_GRADIENT = (225, 225, 225)
 
     #[x,y,z]
+    CENTER_VERTEX = [0,0]
+
+    #[x,y,z] relative to the center
     VERTEX_TABLE = [[23,63,85],
                     [23,-63,85],
                     [-86,-63,22],
@@ -66,7 +69,8 @@ class Renderer:
 
     def __init__(self) -> None:
         pass
-    
+
+
     """Draw lines"""
     @classmethod
     def drawLine(self):
@@ -178,36 +182,36 @@ class Renderer:
                 vertex[0] = ROTATION_Z_RESULT[0]
                 vertex[1] = ROTATION_Z_RESULT[1]
 
+
     """Move the vertices in the 3D space"""
     @classmethod
-    def moveVertexOnAxis(self):
+    def moveProjectVerticesOnAxis(self):
         # Déplacement de tous les points du cube sur l'axe X
         if self.transX:
-            for vertex in self.VERTEX_TABLE:
-                if self.transXinv :
-                    if (vertex[0]+self.MOVE_VALUE)<500 :
-                        vertex[0]+=self.MOVE_VALUE
-                    else:
-                        self.transXinv = False
-                else :
-                    if (vertex[0]-self.MOVE_VALUE)>0 :
-                        vertex[0]-=self.MOVE_VALUE
-                    else:
-                        self.transXinv = True
+            if self.transXinv :
+                if (self.CENTER_VERTEX+self.MOVE_VALUE)<250 :
+                    self.CENTER_VERTEX+=self.MOVE_VALUE
+                else:
+                    self.transXinv = False
+            else :
+                if (self.CENTER_VERTEX-self.MOVE_VALUE)>-250 :
+                    self.CENTER_VERTEX-=self.MOVE_VALUE
+                else:
+                    self.transXinv = True
 
         # Déplacement de tous les points du cube sur l'axe Y
         if self.transY :
-            for vertex in self.PROJECTED_VERTEX_TABLE:
-                if self.transYinv :
-                    if (vertex[1]+self.MOVE_VALUE)<500 :
-                        vertex[1]+=self.MOVE_VALUE
-                    else:
-                        self.transYinv = False
-                else :
-                    if (vertex[1]-self.MOVE_VALUE)>0 :
-                        vertex[1]-=self.MOVE_VALUE
-                    else:
-                        self.transYinv = True
+            if self.transYinv :
+                if (self.CENTER_VERTEX+self.MOVE_VALUE)<250 :
+                    self.CENTER_VERTEX+=self.MOVE_VALUE
+                else:
+                    self.transYinv = False
+            else :
+                if (self.CENTER_VERTEX-self.MOVE_VALUE)>-250 :
+                    self.CENTER_VERTEX-=self.MOVE_VALUE
+                else:
+                    self.transYinv = True
+
 
     """Project points from 3D space to 2D space"""
     @classmethod
@@ -215,37 +219,6 @@ class Renderer:
         for i in range(len(self.VERTEX_TABLE)):
             self.PROJECTED_VERTEX_TABLE[i] = self.project3DOn2DScreen(self.VERTEX_TABLE[i])
 
-
-    """Move the projected points on an axis"""
-    @classmethod
-    def moveOnAxis(self):
-        # Déplacement de tous les points du cube sur l'axe X
-        if self.transX:
-            for point in self.PROJECTED_VERTEX_TABLE:
-                if self.transXinv :
-                    if (point[0]+self.MOVE_VALUE)<500 :
-                        point[0]+=self.MOVE_VALUE
-                    else:
-                        self.transXinv = False
-                else :
-                    if (point[0]-self.MOVE_VALUE)>0 :
-                        point[0]-=self.MOVE_VALUE
-                    else:
-                        self.transXinv = True
-
-        # Déplacement de tous les points du cube sur l'axe Y
-        if self.transY :
-            for point in self.PROJECTED_VERTEX_TABLE:
-                if self.transYinv :
-                    if (point[1]+self.MOVE_VALUE)<500 :
-                        point[1]+=self.MOVE_VALUE
-                    else:
-                        self.transYinv = False
-                else :
-                    if (point[1]-self.MOVE_VALUE)>0 :
-                        point[1]-=self.MOVE_VALUE
-                    else:
-                        self.transYinv = True
 
     @classmethod
     def gradientRect(self, border_colour, middle_colour, target_rect ):
@@ -258,6 +231,7 @@ class Renderer:
 
         colour_rect = pygame.transform.smoothscale( colour_rect, ( target_rect.width, target_rect.height ) )  # stretch!
         self._WIN.blit( colour_rect, target_rect )
+
 
     @staticmethod
     def getColorFromIndex(index):
@@ -275,6 +249,7 @@ class Renderer:
             return (125,125,125)
         else:
             return (0,0,0)
+
 
     @staticmethod
     def checkEvents():
